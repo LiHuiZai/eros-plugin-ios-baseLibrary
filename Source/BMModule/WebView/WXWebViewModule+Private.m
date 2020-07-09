@@ -25,15 +25,6 @@ WX_EXPORT_METHOD(@selector(evaluateScriptEleRef:jsCode:callback:))
         NSString *webViewPName = [[NSString alloc] initWithCString:property_getName(webViewProperty) encoding:NSUTF8StringEncoding];
         
         id webViewValue = [webCoponent valueForKey:webViewPName];
-        if ([webViewValue isKindOfClass:[UIWebView class]]) {
-            NSString * callbackString = [(UIWebView*)webViewValue stringByEvaluatingJavaScriptFromString:jsCode];
-            if (callbackString) {
-                if (callback) {
-                    callback(callbackString);
-                }
-            }
-        }
-    
     }];
 }
 

@@ -13,18 +13,18 @@
 #import "BMMediatorManager.h"
 #import <UINavigationController+FDFullscreenPopGesture.h>
 #import <JavaScriptCore/JavaScriptCore.h>
-#import "UIWebView+BMExtend.h"
 #import "BMUserInfoModel.h"
 #import "BMNative.h"
 #import "UIColor+Util.h"
-
-@interface BMWebViewController () <UIWebViewDelegate, JSExport>
+#import "WKWebView+BMExtend.h"
+#import "<WebKit/WebKit.h>"
+@interface BMWebViewController () <WKUIDelegate,WKNavigationDelegate, JSExport>
 {
     BOOL _showProgress;
 }
 
 @property (nonatomic, strong) JSContext *jsContext;
-@property (nonatomic, strong) UIWebView *webView;
+@property (nonatomic, strong) WKWebView *webView;
 
 /** 伪进度条 */
 @property (nonatomic, strong) CAShapeLayer *progressLayer;
@@ -67,10 +67,11 @@
     // 减去 Indicator 高度
     height -= K_TOUCHBAR_HEIGHT;
 
-    self.webView = [[UIWebView alloc] initWithFrame:CGRectMake(0, 0, K_SCREEN_WIDTH, height)];
+    self.webView = [[WKWebView alloc] initWithFrame:CGRectMake(0, 0, K_SCREEN_WIDTH, height)];
     self.webView.backgroundColor = self.routerInfo.backgroundColor? [UIColor colorWithHexString:self.routerInfo.backgroundColor]: K_BACKGROUND_COLOR;
     self.webView.scrollView.bounces = NO;
-    self.webView.delegate = self;
+    self.webView.UIDelegate = self;
+    self.webView.navigationDelegate=self;
 
     self.view.backgroundColor = self.routerInfo.backgroundColor? [UIColor colorWithHexString:self.routerInfo.backgroundColor]: K_BACKGROUND_COLOR;
 
@@ -199,51 +200,34 @@
     [self.webView loadRequest:request];
 }
 
-
-#pragma mark - UIWebViewDelegate
-
-- (void)webViewDidStartLoad:(UIWebView *)webView
-{
+// 当内容开始返回时调用
+- (void)webView:(WKWebView *)webView didCommitNavigation:(WKNavigation *)navigation;{
     if (!self.timer) {
-        self.timer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(progressAnimation:) userInfo:nil repeats:YES];
-    }
-    
-    if (_showProgress) {
-        
-        [self.timer resumeTimer];
-        
-    }
-    
-    _showProgress = YES;
+           self.timer = [NSTimer scheduledTimerWithTimeInterval:0.15 target:self selector:@selector(progressAnimation:) userInfo:nil repeats:YES];
+       }
+       
+       if (_showProgress) {
+           
+           [self.timer resumeTimer];
+           
+       }
+       
+       _showProgress = YES;
 }
 
-- (BOOL)webView:(UIWebView *)webView shouldStartLoadWithRequest:(NSURLRequest *)request navigationType:(UIWebViewNavigationType)navigationType
-{
-    /* 如果是goBack的操作 从新加载url避免有些页面加载不完全的问题 */
-    if (navigationType == UIWebViewNavigationTypeBackForward) {
-        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.01 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-            NSURL *url = [NSURL URLWithString:request.URL.absoluteString];
-            NSURLRequest *request = [NSURLRequest requestWithURL:url];
-            [self.webView loadRequest:request];
-        });
-        return YES;
-    }
-    
-    WXLogInfo(@"%@",request.URL.absoluteString);
-    
-    return YES;
+- (void)webView:(WKWebView *)webView didStartProvisionalNavigation:(WKNavigation *)navigation{
 }
 
-- (void)webViewDidFinishLoad:(UIWebView *)webView
-{
-    /** 检查一下字体大小 */
+// 页面加载完成之后调用
+- (void)webView:(WKWebView *)webView didFinishNavigation:(WKNavigation *)navigation{
     [self.webView checkCurrentFontSize];
-    
-    NSString * docTitle = [webView stringByEvaluatingJavaScriptFromString:@"document.title"];
-    if (docTitle && docTitle.length) {
-        self.navigationItem.title = docTitle;
-    }
-    
+    NSString *docTitle;
+    [webView evaluateJavaScript:@"document.title" completionHandler:^(id _Nullable title, NSError * _Nullable error) {
+         if ([title length]>0) {
+             self.navigationItem.title = title;
+             
+         }
+    }];
     if (_timer != nil) {
         [_timer pauseTimer];
     }
@@ -255,12 +239,10 @@
             _progressLayer = nil;
         });
     }
+
 }
 
-- (void)webView:(UIWebView *)webView didFailLoadWithError:(NSError *)error
-{
-    WXLogInfo(@"\n******************** - WebView didFailLoad - ********************\n %@",error);
-    
+- (void)webView:(WKWebView *)webView didFailNavigation:(null_unspecified WKNavigation *)navigation withError:(NSError *)error{
     if (_timer != nil) {
         [_timer pauseTimer];
     }
@@ -270,9 +252,7 @@
         _progressLayer = nil;
     }
     
-    WXLogInfo(@"\n******************** - WebView didFailLoad - ********************\n %@",webView.request.URL.absoluteString);
 }
-
 - (void)progressAnimation:(NSTimer *)timer
 {
     self.progressLayer.strokeEnd += 0.005f;

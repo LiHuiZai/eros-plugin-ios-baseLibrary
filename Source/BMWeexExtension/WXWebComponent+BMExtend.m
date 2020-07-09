@@ -15,7 +15,7 @@
 
 @implementation WXWebComponent (BMExtend)
 
-- (void)bm_webViewDidFinishLoad:(UIWebView *)webView
+- (void)bm_webViewDidFinishLoad:(WKWebView *)webView
 {
     [self bm_webViewDidFinishLoad:webView];
     
@@ -30,7 +30,7 @@
 - (void)bm_viewDidLoad
 {
     [self bm_viewDidLoad];
-    UIWebView * webview = (UIWebView *)self.view;
+    WKWebView * webview = (WKWebView *)self.view;
     webview.opaque = NO;
     webview.backgroundColor = [UIColor clearColor];
     
@@ -60,7 +60,7 @@
 -(void)bm_loadURL:(NSString *)url
 {
     WXPerformBlockOnMainThread(^{
-        UIWebView * webview = (UIWebView *)self.view;
+        WKWebView * webview = (WKWebView *)self.view;
         
         if(webview){
             NSURL *urlPath = [NSURL URLWithString:url];

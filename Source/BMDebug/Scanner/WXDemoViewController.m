@@ -27,8 +27,9 @@
 #import "DemoDefine.h"
 #import "WXPrerenderManager.h"
 #import "WXMonitor.h"
+#import <WebKit/WebKit.h>
 
-@interface WXDemoViewController () <UIScrollViewDelegate, UIWebViewDelegate>
+@interface WXDemoViewController () <UIScrollViewDelegate, WKUIDelegate,WKNavigationDelegate>
 @property (nonatomic, strong) WXSDKInstance *instance;
 @property (nonatomic, strong) UIView *weexView;
 

@@ -1,7 +1,7 @@
 # coding: utf-8
 Pod::Spec.new do |s|
   s.name         = "ErosPluginBaseLibrary"
-  s.version      = "1.4.0"
+  s.version      = "1.4.1"
   s.summary      = "WeexEros iOS App base library"
   s.description  = <<-DESC
                    WeexEros iOS App base library
@@ -11,8 +11,8 @@ Pod::Spec.new do |s|
   s.license      = "MIT"
   s.author       = { "xionghuayu" => "18601949015@163.com" }
 
-  s.platform     = :ios, "8.0"
-  s.ios.deployment_target = "8.0"
+  s.platform     = :ios, "9.0"
+  s.ios.deployment_target = "9.0"
   s.source       = { :git => "https://github.com/LiHuiZai/eros-plugin-ios-baseLibrary.git", :tag => s.version.to_s }
   s.requires_arc = true
   

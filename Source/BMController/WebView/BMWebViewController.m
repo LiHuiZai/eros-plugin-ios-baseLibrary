@@ -79,7 +79,7 @@
     [self reloadURL];
     
     /* 获取js的运行环境 */
-    self.jsContext = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
+//    self.jsContext = [self.webView valueForKeyPath:@"documentView.webView.mainFrame.javaScriptContext"];
     [self injectionJsMethod];
 }
 

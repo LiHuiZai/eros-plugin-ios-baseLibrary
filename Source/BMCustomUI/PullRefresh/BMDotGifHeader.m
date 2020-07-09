@@ -28,7 +28,7 @@
 //    [self setImages:idleImages forState:MJRefreshStatePulling];
     
     // 设置正在刷新状态的动画图片
-    [self setImages:idleImages duration:0.8 forState:MJRefreshStateRefreshing];
+    [self setImages:idleImages  forState:MJRefreshStateRefreshing];
 }
 
 @end

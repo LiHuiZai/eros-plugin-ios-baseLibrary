@@ -20,7 +20,7 @@ Pod::Spec.new do |s|
   s.dependency 'Masonry', '1.1.0'
   s.dependency 'YYModel', '1.0.4'
   s.dependency 'SSZipArchive', '2.2.2'
-  s.dependency 'YTKNetwork', '4.0.0'
+  s.dependency 'YTKNetwork', '3.0.0'
   s.dependency 'SocketRocket', '0.5.1'
   s.dependency 'SDWebImage', '5.0.6'
   s.dependency 'MJRefresh', '3.2.0'

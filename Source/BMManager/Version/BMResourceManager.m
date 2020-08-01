@@ -239,7 +239,7 @@ typedef NS_ENUM(NSUInteger, BMResourceCheckUpdateCode) {
         WXLogInfo(@"\n 下载进度>>>> 文件总大小：%lld 已下载：%lld",progress.totalUnitCount,progress.completedUnitCount);
         
 #ifdef DEBUG
-        [SVProgressHUD showProgress:((float)progress.completedUnitCount / (float)progress.totalUnitCount) status:@"js资源文件更新中..."];
+        [SVProgressHUD showProgress:((float)progress.completedUnitCount / (float)progress.totalUnitCount) status:@"资源文件更新中..."];
 #endif
         
     };

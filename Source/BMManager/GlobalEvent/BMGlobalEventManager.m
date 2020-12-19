@@ -81,6 +81,13 @@
     [[BMGlobalEventManager shaerInstance] _sendGlobalEvent:@"pushMessage" params:date];
 }
 
++ (void)pushMessageWY:(NSDictionary *)info appLaunchedByNotification:(BOOL)isLaunchedByNotification
+{
+    NSMutableDictionary *date = [NSMutableDictionary dictionaryWithDictionary:info];
+    [date setValue:[NSNumber numberWithBool:isLaunchedByNotification] forKey:@"trigger"];
+    [[BMGlobalEventManager shaerInstance] _sendGlobalEvent:@"messageCountChange" params:date];
+}
+
 + (void)sendGlobalEvent:(NSString *)event params:(NSDictionary *)params
 {
     [[BMGlobalEventManager shaerInstance] _sendGlobalEvent:event params:params];

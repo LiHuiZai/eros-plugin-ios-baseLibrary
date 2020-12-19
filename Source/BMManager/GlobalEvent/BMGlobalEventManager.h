@@ -58,4 +58,6 @@ static NSString * const BMFirstScreenDidFinish = @"BMFirstScreenDidFinish";
 /* 收到推送通知后发送事件给js */
 + (void)pushMessage:(NSDictionary *)info appLaunchedByNotification:(BOOL)isLaunchedByNotification;
 
+/* 收到推送通知后发送事件给js */
++ (void)pushMessageWY:(NSDictionary *)info appLaunchedByNotification:(BOOL)isLaunchedByNotification;
 @end
